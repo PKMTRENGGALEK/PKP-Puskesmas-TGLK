@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Link PKP Puskesmas Trenggalek</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+            rgba(0, 123, 255, 0.5),
+            rgba(0, 123, 255, 0.5)
+          ),
+          url("https://images.pexels.com/photos/40568/medical-appointment-doctor-healthcare-40568.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1")
+            no-repeat center center fixed;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #fff;
+      }
+      .container {
+        background-color: rgba(255, 255, 255, 0.95);
+        color: #004080;
+        padding: 30px 40px;
+        border-radius: 14px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        max-width: 440px;
+        width: 100%;
+        position: relative;
+        text-align: center;
+      }
+      h1 {
+        color: #007bff;
+        margin-bottom: 24px;
+        font-weight: 700;
+      }
+      .links {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 40px;
+      }
+      .link-item {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #007bff;
+        border-radius: 10px;
+        padding: 12px 20px;
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.1rem;
+        text-decoration: none;
+        user-select: none;
+        cursor: default;
+      }
+      .link-item a {
+        color: #fff;
+        text-decoration: none;
+        flex-grow: 1;
+        overflow-wrap: anywhere;
+      }
+      .link-item a:hover {
+        text-decoration: underline;
+      }
+      .btn-edit,
+      .btn-delete {
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        margin-left: 12px;
+        transition: color 0.3s ease;
+        flex-shrink: 0;
+      }
+      .btn-edit:hover {
+        color: #ffd966;
+      }
+      .btn-delete:hover {
+        color: #ff4c4c;
+      }
+      /* Tombol tambah data bulat hijau + */
+      #add-btn {
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #28a745;
+        border: none;
+        color: white;
+        font-size: 28px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      #add-btn:hover {
+        background-color: #1e7e34;
+        box-shadow: 0 7px 22px rgba(30, 126, 52, 0.6);
+      }
+      /* Modal */
+      #modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+      #modal.active {
+        display: flex;
+      }
+      .modal-content {
+        background: #fff;
+        border-radius: 14px;
+        padding: 25px 30px;
+        max-width: 380px;
+        width: 100%;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        color: #004080;
+        text-align: left;
+        position: relative;
+      }
+      .modal-content h2 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #007bff;
+        font-weight: 700;
+      }
+      .modal-content label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+      .modal-content input[type="text"],
+      .modal-content input[type="url"] {
+        width: 100%;
+        padding: 8px 10px;
+        font-size: 1rem;
+        margin-bottom: 15px;
+        border: 2px solid #007bff;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s ease;
+      }
+      .modal-content input[type="text"]:focus,
+      .modal-content input[type="url"]:focus {
+        border-color: #0056b3;
+      }
+      .modal-content button {
+        background-color: #007bff;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .modal-content button:hover {
+        background-color: #0056b3;
+      }
+      .modal-close {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        cursor: pointer;
+        user-select: none;
+      }
+      @media (max-width: 480px) {
+        .container {
+          max-width: 95%;
+          padding: 20px 25px;
+        }
+        #add-btn {
+          top: 15px;
+          right: 15px;
+          width: 44px;
+          height: 44px;
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="container"
+      role="main"
+      aria-label="Link PKP Puskesmas Trenggalek"
+    >
+      <h1>Link PKP Puskesmas Trenggalek</h1>
+      <div
+        class="links"
+        id="links-container"
+        aria-live="polite"
+        aria-relevant="additions removals"
+      ></div>
+      <button id="add-btn" aria-label="Tambah Data">+</button>
+    </div>
+
+    <!-- Modal untuk tambah/edit -->
+    <div
+      id="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+      tabindex="-1"
+    >
+      <div class="modal-content">
+        <span class="modal-close" id="modal-close" aria-label="Tutup"
+          >&times;</span
+        >
+        <h2 id="modal-title">Tambah/Edit Link PKP</h2>
+        <form id="edit-form">
+          <label for="input-nama">Nama Link:</label>
+          <input
+            type="text"
+            id="input-nama"
+            name="nama"
+            placeholder="Misal: PKP 2024"
+            required
+            autocomplete="off"
+          />
+          <label for="input-url">URL Link:</label>
+          <input
+            type="url"
+            id="input-url"
+            name="url"
+            placeholder="https://..."
+            required
+            autocomplete="off"
+          />
+          <button type="submit">Simpan</button>
+        </form>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        onValue,
+        push,
+        update,
+        remove,
+      } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCnTylPccxjUNGC8S9MrDck3cVIIUq95yk",
+        authDomain: "linkpkp-f687d.firebaseapp.com",
+        databaseURL:
+          "https://linkpkp-f687d-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "linkpkp-f687d",
+        storageBucket: "linkpkp-f687d.appspot.com",
+        messagingSenderId: "620354831449",
+        appId: "1:620354831449:web:90f395f25f7361acc05d48",
+        measurementId: "G-24TX5G7HT0",
+      };
+
+      // Init Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+
+      const linksContainer = document.getElementById("links-container");
+      const addBtn = document.getElementById("add-btn");
+      const modal = document.getElementById("modal");
+      const modalClose = document.getElementById("modal-close");
+      const editForm = document.getElementById("edit-form");
+      const inputNama = document.getElementById("input-nama");
+      const inputUrl = document.getElementById("input-url");
+
+      // State current editing key (null = tambah baru)
+      let currentKey = null;
+
+      // Load data realtime
+      function loadLinks() {
+        const linksRef = ref(db, "linksPKP");
+        onValue(linksRef, (snapshot) => {
+          const data = snapshot.val();
+          linksContainer.innerHTML = "";
+          if (data) {
+            Object.entries(data).forEach(([key, val]) => {
+              const div = document.createElement("div");
+              div.className = "link-item";
+
+              const a = document.createElement("a");
+              a.href = val.url || "#";
+              a.target = "_blank";
+              a.rel = "noopener";
+              a.textContent = val.nama || "Nama belum diisi";
+              if (!val.url) {
+                a.style.opacity = "0.6";
+                a.style.cursor = "default";
+                a.removeAttribute("href");
+              }
+
+              // Tombol edit (gear)
+              const btnEdit = document.createElement("button");
+              btnEdit.className = "btn-edit";
+              btnEdit.title = "Edit link";
+              btnEdit.setAttribute(
+                "aria-label",
+                `Edit link ${val.nama || "kosong"}`
+              );
+              btnEdit.textContent = "⚙";
+              btnEdit.addEventListener("click", () => {
+                openModal(key, val.nama || "", val.url || "");
+              });
+
+              // Tombol hapus (trash)
+              const btnDelete = document.createElement("button");
+              btnDelete.className = "btn-delete";
+              btnDelete.title = "Hapus link";
+              btnDelete.setAttribute(
+                "aria-label",
+                `Hapus link ${val.nama || "kosong"}`
+              );
+              btnDelete.textContent = "🗑️";
+              btnDelete.addEventListener("click", () => {
+                if (
+                  confirm(
+                    `Yakin ingin menghapus link "${val.nama || "kosong"}"?`
+                  )
+                ) {
+                  remove(ref(db, "linksPKP/" + key)).catch((err) => {
+                    alert("Gagal hapus data: " + err);
+                  });
+                }
+              });
+
+              div.appendChild(a);
+              div.appendChild(btnEdit);
+              div.appendChild(btnDelete);
+              linksContainer.appendChild(div);
+            });
+          } else {
+            linksContainer.innerHTML = "<p>Tidak ada data link.</p>";
+          }
+        });
+      }
+
+      // Buka modal edit/tambah
+      function openModal(key, nama, url) {
+        currentKey = key;
+        inputNama.value = nama;
+        inputUrl.value = url;
+        modal.classList.add("active");
+        inputNama.focus();
+      }
+
+      // Tutup modal
+      function closeModal() {
+        modal.classList.remove("active");
+        currentKey = null;
+        editForm.reset();
+      }
+
+      // Submit simpan data
+      editForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const nama = inputNama.value.trim();
+        const url = inputUrl.value.trim();
+
+        if (!nama || !url) {
+          alert("Nama dan URL harus diisi.");
+          return;
+        }
+
+        if (currentKey) {
+          // update existing
+          update(ref(db, "linksPKP/" + currentKey), { nama, url })
+            .then(() => {
+              closeModal();
+            })
+            .catch((err) => alert("Error update data: " + err));
+        } else {
+          // tambah baru (tidak terjadi karena tombol tambah langsung buat dulu di DB)
+          push(ref(db, "linksPKP"), { nama, url })
+            .then(() => {
+              closeModal();
+            })
+            .catch((err) => alert("Error tambah data: " + err));
+        }
+      });
+
+      // Tombol tambah data buat entry kosong lalu open modal
+      addBtn.addEventListener("click", () => {
+        push(ref(db, "linksPKP"), { nama: "", url: "" })
+          .then((newRef) => {
+            openModal(newRef.key, "", "");
+          })
+          .catch((err) => alert("Gagal tambah data: " + err));
+      });
+
+      // Tutup modal tombol close
+      modalClose.addEventListener("click", closeModal);
+
+      // Tutup modal jika klik di luar konten modal
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      loadLinks();
+    </script>
+  </body>
+</html>
